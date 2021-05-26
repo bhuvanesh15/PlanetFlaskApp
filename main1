@@ -1,0 +1,17 @@
+from flask import Flask
+from flask_restful import Api, Resource
+
+app = Flask(__name__)
+Api = Api(app)
+
+heros= {"vijay":{"sweet":"ilayathapathy","best":"Master","tall":"5.10"},
+"ajith":{"sweet":"thala","best":"mokkaadam","tall":"5.10"}}
+class HelloWorld(Resource):
+    def get(self,n):
+        return heros[n]
+
+Api.add_resource(HelloWorld,"/poda/<string:n>")
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
