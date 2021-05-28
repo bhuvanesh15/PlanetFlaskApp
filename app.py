@@ -13,14 +13,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + file_path  #configs
 
 app.config['JWT_SECRET_KEY'] = 'super-secert'
 
-app.config['MAIL_SERVER'] = 'smtp.mailtrap.io'
-app.config['MAIL_USERNAME'] = 'fab4a60dfd6dfa'
-app.config['MAIL_PASSWORD'] = '455d00c76fc9d7'
+app.config['MAIL_SERVER']='smtp.mailtrap.io'
+#insertmailtrapimptconfigs
 
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 jwt = JWTManager(app)
+mail = Mail(app)
 
 
 
@@ -144,6 +144,16 @@ def login():
 
 
 @app.route('/retrive_password/<string:email>',methods=['POST'])
+def forgotpass(email: String):
+    USser = username.query.filter_by(email=email).first()
+    if USser:
+        msg = Message("Your planet API password is " + USser.password,
+                     sender="admin@god.com",
+                     recipients=[email])
+        mail.send(msg)
+        return jsonify(message="Forgetten password send to "+ email)
+    else:
+        return jsonify(message="the emailid does not exist")
 
 
 
