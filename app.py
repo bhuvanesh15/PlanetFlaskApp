@@ -135,7 +135,7 @@ def login():
         email = request.form['email']   #inputFormexample
         password = request.form['password']
 
-    test = username.query.filter_by(email=email,password=password).first() #remember to auntendicate bothemailid and password
+    test = username.query.filter_by(email=email,password=password).first()  #remember to auntendicate bothemailid and password
     if test:
         accesss_token1 = create_access_token(identity=email)
         return jsonify(message='Login succeeded',accesss_token =accesss_token1),200
@@ -154,6 +154,19 @@ def forgotpass(email: String):
         return jsonify(message="Forgetten password send to "+ email)
     else:
         return jsonify(message="the emailid does not exist")
+
+
+@app.route('/remove_planet/<int:planetis>',methods=['DELETE'])
+@jwt_required
+def rm(planetis: int):
+    planet = planets.query.filter_by(planet_id=planetis).first() #firstfunction is important
+    if planet:
+        db.session.delete(planet)
+        db.session.commit()
+        return jsonify(message="planet deleted"),200
+    else:
+        return jsonify(message="this planet not exist in the universe"),404
+
 
 
 
