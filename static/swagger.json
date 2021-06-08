@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "bhuvi",
+    "version": "1.0.0",
+    "title": "Welcome to Planets api",
+    "contact": {
+      "email": "bhuv@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/planets": {
+      "get": {
+        "tags": [
+          "Requesting all planet details"
+        ],
+        "summary": "Returns bookRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/planets"
+            }
+          }
+        }
+      }
+    },
+    "/getusers": {
+      "get": {
+        "tags": [
+          "Requesting all user details"
+        ],
+        "summary": "Returns bookRequests",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/planets"
+            }
+          }
+        }
+      }
+    },
+    "/paramsVariable/{name}/{age}": {
+      "get": {
+        "tags": [
+          "check valid user"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "description": "name of user",
+          "type": "string"
+        },
+        {
+          "name": "age",
+          "in": "path",
+          "required": true,
+          "description": "age limit",
+          "type": "string"
+        }
+      ]
+    },
+        "/login": {
+      "post": {
+        "tags": [
+          "Verifying User"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+                  "required": [
+                     "userName Login"
+                  ],
+                  "properties": {
+                     "email": {
+                        "type": "string"
+                     },
+                     "password": {
+                        "type": "string"
+                     }
+                  }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}
