@@ -8,17 +8,24 @@ from flask_mail import Mail, Message
 from flask_pymongo import PyMongo
 from mongoengine import *
 from flask_swagger_ui import get_swaggerui_blueprint
+from PIL import Image
+import base64
+from io import BytesIO
+import requests
 
 
 
 #file_path = os.path.abspath(os.getcwd()) + "\database.db"
 app = Flask(__name__)
 
+download_FOLDER = './static/images'
+
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + file_path  #configs
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/PlanetList'  #configs
 app.config['JWT_SECRET_KEY'] = 'super-secert'
 
 app.config['MAIL_SERVER']='smtp.mailtrap.io'
+app.config['download_FOLDER'] = download_FOLDER
 #insertmailtrapimptconfigs
 
 mongo = PyMongo(app)
@@ -96,7 +103,51 @@ app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
 @app.route('/')
 def index():
-    return jsonify(Helo='index.html', wes='for the world'), 404
+    return render_template("index.html")
+    #return jsonify(Helo='index.html', wes='for the world'), 404
+
+
+@app.route("/send-image/<path:url>")
+def imageUp(url):
+    from datetime import datetime
+    datetimeObj = datetime.now()
+    file_name_for_base64_data = datetimeObj.strftime("%d-%b-%Y--(%H-%M-%S)")
+    file_name_for_regular_data = url[-10:-4]
+
+    try:
+
+        if "data:image/jpeg;base64," in url:
+            base_string = url.replace("data:image/jpeg;base64,", "")
+            decoded_img = base64.b64decode(base_string)
+            img = Image.open(BytesIO(decoded_img))
+
+            file_name = file_name_for_base64_data + ".jpg"
+            img.save(file_name, "jpeg")
+
+
+        elif "data:image/png;base64," in url:
+            base_string = url.replace("data:image/png;base64,", "")
+            decoded_img = base64.b64decode(base_string)
+            img = Image.open(BytesIO(decoded_img))
+
+            file_name = file_name_for_base64_data + ".png"
+            img.save(file_name, "png")
+
+
+        else:
+            response = requests.get(url)
+            img = Image.open(BytesIO(response.content)).convert("RGB")
+            file_name = file_name_for_regular_data + ".jpg"
+            img.save(file_name, "jpeg")
+
+
+        status = "Image has been succesfully sent to the server."
+    except Exception as e:
+        status = "Error! = " + str(e)
+
+
+    return status,200
+
 
 
 @app.route('/getusers')
