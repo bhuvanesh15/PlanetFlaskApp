@@ -120,8 +120,8 @@ def imageUp(url):
             base_string = url.replace("data:image/jpeg;base64,", "")
             decoded_img = base64.b64decode(base_string)
             img = Image.open(BytesIO(decoded_img))
-
-            file_name = file_name_for_base64_data + ".jpg"
+            #add time stamp
+            file_name = download_FOLDER + file_name_for_base64_data + ".jpg"
             img.save(file_name, "jpeg")
 
 
@@ -130,14 +130,14 @@ def imageUp(url):
             decoded_img = base64.b64decode(base_string)
             img = Image.open(BytesIO(decoded_img))
 
-            file_name = file_name_for_base64_data + ".png"
+            file_name = download_FOLDER + file_name_for_base64_data + ".png"
             img.save(file_name, "png")
 
 
         else:
             response = requests.get(url)
             img = Image.open(BytesIO(response.content)).convert("RGB")
-            file_name = file_name_for_regular_data + ".jpg"
+            file_name = download_FOLDER+file_name_for_regular_data + ".jpg"
             img.save(file_name, "jpeg")
 
 
